@@ -39,17 +39,8 @@ buildSolidObject('tree', 100, 100, 20, 20);
 function drawWorld() {
     ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-    if (player.dx == 0 && player.dy == 0) {
-      player.currentImages = [player.currentImages[0], player.currentImages[0]]
-    } else if (player.dx > 0) {
-      player.currentImages = [dogRight1, dogRight2]
-    } else if (player.dx < 0) {
-      player.currentImages = [dogLeft1, dogLeft2]
-    } else if (player.dy < 0) {
-      player.currentImages = [dogUp1, dogUp2]
-    } else if (player.dy > 0) {
-      player.currentImages = [dogDown1, dogDown2]
-    }
+    // since tickCounter is always between 0 and 100, `tickCounter > 50` will be false for 50 frames then true for 50 frames
+    // +true and +false gives 0 or 1, which lets us select alternating frames from currentImages every 50 ticks
     ctx.drawImage(player.currentImages[+(tickCounter > 50)], player.x, player.y, player.width, player.height)
 
     ctx.fillStyle = "#0a250e";
@@ -130,6 +121,18 @@ document.addEventListener("keydown", function(e) {
     if (e.keyCode === 39) {
         //right arrow
         player.dx = 1
+    }
+
+    if (player.dx == 0 && player.dy == 0) {
+      player.currentImages = [player.currentImages[0], player.currentImages[0]]
+    } else if (player.dx > 0) {
+      player.currentImages = [dogRight1, dogRight2]
+    } else if (player.dx < 0) {
+      player.currentImages = [dogLeft1, dogLeft2]
+    } else if (player.dy < 0) {
+      player.currentImages = [dogUp1, dogUp2]
+    } else if (player.dy > 0) {
+      player.currentImages = [dogDown1, dogDown2]
     }
 });
 
