@@ -1,0 +1,75 @@
+<html>
+    <head>
+       <style>
+           #gameCanvas {
+               background-color: darkcyan;
+               border: 1px solid black;
+           }
+       </style>
+    </head>
+    <body>
+        <canvas id="gameCanvas" width="700" height="500">
+
+        </canvas>
+        <script>
+            var player = {
+                x: 10,
+                y: 10,
+                dx: 0,
+                dy: 0,
+                width: 20,
+                height: 20
+            }
+            var canvas = document.getElementById("gameCanvas")
+            var ctx = canvas.getContext("2d");
+
+
+            function drawWorld() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height)
+                ctx.fillStyle = "#FF0000";
+                ctx.fillRect(player.x, player.y, player.width, player.height);
+                window.requestAnimationFrame(drawWorld)
+            }
+
+            function tick() {
+                if (0 < player.x + player.dx && player.x + player.dx < canvas.width - player.width) {
+                    player.x += player.dx;
+                }
+                if (0 < player.y +player.dy && player.y +player.dy < canvas.height - player.height) {
+                    player.y += player.dy;
+                }
+
+            }
+
+            document.addEventListener("keydown", function(e) {
+                if (e.keyCode === 38) {
+                    //up arrow
+                    player.dy = -1
+                }
+                if (e.keyCode === 40) {
+                    //down arrow
+                    player.dy = 1
+                }
+                if (e.keyCode === 37) {
+                    //left arrow
+                    player.dx = -1
+                }
+                if (e.keyCode === 39) {
+                    //right arrow
+                    player.dx = 1
+                }
+            });
+
+            document.addEventListener("keyup", function(e) {
+
+                if ([38, 40, 37, 39].indexOf(e.keyCode) !== -1) {
+                    player.dx = 0;
+                    player.dy = 0;
+                }
+
+            });
+            setInterval(tick, 10);
+            drawWorld()
+        </script>
+    </body>
+</html>
