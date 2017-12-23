@@ -105,6 +105,20 @@ function playerAvoidsHorizontalBoundary() {
     return (0 < player.x + player.dx) && (player.x + player.dx < canvas.width - player.width)
 }
 
+function setPlayerAnimation() {
+  if (player.dx == 0 && player.dy == 0) {
+    player.currentImages = [player.currentImages[0], player.currentImages[0]]
+  } else if (player.dx > 0) {
+    player.currentImages = [dogRight1, dogRight2]
+  } else if (player.dx < 0) {
+    player.currentImages = [dogLeft1, dogLeft2]
+  } else if (player.dy < 0) {
+    player.currentImages = [dogUp1, dogUp2]
+  } else if (player.dy > 0) {
+    player.currentImages = [dogDown1, dogDown2]
+  }
+}
+
 document.addEventListener("keydown", function(e) {
     if (e.keyCode === 38) {
         //up arrow
@@ -122,18 +136,7 @@ document.addEventListener("keydown", function(e) {
         //right arrow
         player.dx = 1
     }
-
-    if (player.dx == 0 && player.dy == 0) {
-      player.currentImages = [player.currentImages[0], player.currentImages[0]]
-    } else if (player.dx > 0) {
-      player.currentImages = [dogRight1, dogRight2]
-    } else if (player.dx < 0) {
-      player.currentImages = [dogLeft1, dogLeft2]
-    } else if (player.dy < 0) {
-      player.currentImages = [dogUp1, dogUp2]
-    } else if (player.dy > 0) {
-      player.currentImages = [dogDown1, dogDown2]
-    }
+    setPlayerAnimation()
 });
 
 document.addEventListener("keyup", function(e) {
@@ -142,7 +145,7 @@ document.addEventListener("keyup", function(e) {
         player.dx = 0;
         player.dy = 0;
     }
-
+    setPlayerAnimation()
 });
 setInterval(tick, 5);
 drawWorld()
