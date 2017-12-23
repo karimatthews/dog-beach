@@ -1,16 +1,20 @@
 'use strict';
 
-var canvas = document.getElementById("gameCanvas")
+var canvas = document.getElementById("gameCanvas");
 var ctx = canvas.getContext("2d");
 
-var dogRight1 = document.getElementById('dogRight1')
-var dogRight2 = document.getElementById('dogRight2')
-var dogLeft1 = document.getElementById('dogLeft1')
-var dogLeft2 = document.getElementById('dogLeft2')
-var dogDown1 = document.getElementById('dogDown1')
-var dogDown2 = document.getElementById('dogDown2')
-var dogUp1 = document.getElementById('dogUp1')
-var dogUp2 = document.getElementById('dogUp2')
+var dogRight1 = document.getElementById('dogRight1');
+var dogRight2 = document.getElementById('dogRight2');
+var dogLeft1 = document.getElementById('dogLeft1');
+var dogLeft2 = document.getElementById('dogLeft2');
+var dogDown1 = document.getElementById('dogDown1');
+var dogDown2 = document.getElementById('dogDown2');
+var dogUp1 = document.getElementById('dogUp1');
+var dogUp2 = document.getElementById('dogUp2');
+
+var tree3 = document.getElementById('tree3');
+
+var house1 = document.getElementById('house1');
 
 var player = {
     x: 10,
@@ -20,22 +24,32 @@ var player = {
     width: 50,
     height: 50,
     currentImages: [dogRight1, dogRight2]
-}
+};
 
 var tickCounter = 0;
-var solidObjects = []
-function buildSolidObject(type, x, y, width, height) {
+var solidObjects = [];
+
+function buildSolidObject(type, x, y, width, height, img1, img2) {
    var obj = {
        type: type,
        x: x,
        y: y,
        width: width,
-       height: height
-   }
+       height: height,
+       currentImages: [img1,img2]
+   };
    solidObjects.push(obj)
 }
 
-buildSolidObject('tree', 100, 100, 20, 20);
+buildSolidObject('tree', 250, 200, 40, 40, tree3, tree3);
+buildSolidObject('tree', 100, 300, 40, 40, tree3, tree3);
+buildSolidObject('tree', 400, 100, 40, 40, tree3, tree3);
+buildSolidObject('tree', 100, 100, 40, 40, tree3, tree3);
+
+buildSolidObject('tree', 500, 300, 60, 60, house1, house1);
+
+
+
 function drawWorld() {
     ctx.clearRect(0, 0, canvas.width, canvas.height)
 
@@ -44,12 +58,13 @@ function drawWorld() {
     ctx.drawImage(player.currentImages[+(tickCounter > 50)], player.x, player.y, player.width, player.height)
 
     ctx.fillStyle = "#0a250e";
-    solidObjects.forEach(drawObject)
+    solidObjects.forEach(drawObject);
     window.requestAnimationFrame(drawWorld)
 }
 
 function drawObject(solidObject) {
-    ctx.fillRect(solidObject.x, solidObject.y, solidObject.width, solidObject.height);
+    // ctx.fillRect(solidObject.x, solidObject.y, solidObject.width, solidObject.height);
+    ctx.drawImage(solidObject.currentImages[+(tickCounter > 50)], solidObject.x, solidObject.y, solidObject.width, solidObject.height)
 }
 
 function tick() {
@@ -120,19 +135,19 @@ function setPlayerAnimation() {
 }
 
 document.addEventListener("keydown", function(e) {
-    if (e.keyCode === 38) {
+    if (e.keyCode === 38 || e.keyCode === 87) {
         //up arrow
         player.dy = -1
     }
-    if (e.keyCode === 40) {
+    if (e.keyCode === 40 || e.keyCode === 83) {
         //down arrow
         player.dy = 1
     }
-    if (e.keyCode === 37) {
+    if (e.keyCode === 37 || e.keyCode === 65) {
         //left arrow
         player.dx = -1
     }
-    if (e.keyCode === 39) {
+    if (e.keyCode === 39 || e.keyCode === 68) {
         //right arrow
         player.dx = 1
     }
@@ -141,7 +156,7 @@ document.addEventListener("keydown", function(e) {
 
 document.addEventListener("keyup", function(e) {
 
-    if ([38, 40, 37, 39].indexOf(e.keyCode) !== -1) {
+    if ([38, 40, 37, 39, 87, 83, 65, 68].indexOf(e.keyCode) !== -1) {
         player.dx = 0;
         player.dy = 0;
     }
