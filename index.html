@@ -8,25 +8,44 @@
        </style>
     </head>
     <body>
-        <canvas id="gameCanvas" width="800" height="500">
+        <img id='dogRight1' src='./images/dog/dog_right_1.png' style='display: none;'>
+        <img id='dogRight2' src='./images/dog/dog_right_2.png' style='display: none;'>
+        <img id='dogLeft1' src='./images/dog/dog_left_1.png' style='display: none;'>
+        <img id='dogLeft2' src='./images/dog/dog_left_2.png' style='display: none;'>
+        <img id='dogDown1' src='./images/dog/dog_down_1.png' style='display: none;'>
+        <img id='dogDown2' src='./images/dog/dog_down_2.png' style='display: none;'>
+        <img id='dogUp1' src='./images/dog/dog_up_1.png' style='display: none;'>
+        <img id='dogUp2' src='./images/dog/dog_up_2.png' style='display: none;'>
+
+        <canvas id="gameCanvas" width="700" height="500">
 
         </canvas>
         <script>
-
             var canvas = document.getElementById("gameCanvas")
             var ctx = canvas.getContext("2d");
+
+            var dogRight1 = document.getElementById('dogRight1')
+            var dogRight2 = document.getElementById('dogRight2')
+            var dogLeft1 = document.getElementById('dogLeft1')
+            var dogLeft2 = document.getElementById('dogLeft2')
+            var dogDown1 = document.getElementById('dogDown1')
+            var dogDown2 = document.getElementById('dogDown2')
+            var dogUp1 = document.getElementById('dogUp1')
+            var dogUp2 = document.getElementById('dogUp2')
 
             var player = {
                 x: 10,
                 y: 10,
                 dx: 0,
                 dy: 0,
-                width: 20,
-                height: 20
+                width: 50,
+                height: 50,
+                currentImages: [dogRight1, dogRight2]
             }
 
+            var tickCounter = 0;
             var solidObjects = []
-            function  buildSolidObject(type, x, y, width, height) {
+            function buildSolidObject(type, x, y, width, height) {
                var obj = {
                    type: type,
                    x: x,
@@ -37,12 +56,23 @@
                solidObjects.push(obj)
             }
 
-            buildSolidObject('tree', 100, 100, 20, 20)
-
+            buildSolidObject('tree', 100, 100, 20, 20);
             function drawWorld() {
                 ctx.clearRect(0, 0, canvas.width, canvas.height)
-                ctx.fillStyle = "#FF0000";
-                ctx.fillRect(player.x, player.y, player.width, player.height);
+
+                if (player.dx == 0 && player.dy == 0) {
+                  player.currentImages = [player.currentImages[0], player.currentImages[0]]
+                } else if (player.dx > 0) {
+                  player.currentImages = [dogRight1, dogRight2]
+                } else if (player.dx < 0) {
+                  player.currentImages = [dogLeft1, dogLeft2]
+                } else if (player.dy < 0) {
+                  player.currentImages = [dogUp1, dogUp2]
+                } else if (player.dy > 0) {
+                  player.currentImages = [dogDown1, dogDown2]
+                }
+                ctx.drawImage(player.currentImages[+(tickCounter > 50)], player.x, player.y, player.width, player.height)
+
                 ctx.fillStyle = "#0a250e";
                 solidObjects.forEach(drawObject)
                 window.requestAnimationFrame(drawWorld)
@@ -53,12 +83,15 @@
             }
 
             function tick() {
-                movePlayerVertically()
+                tickCounter++
+                if (tickCounter > 100) { tickCounter = 0 }
+
                 movePlayerHorizontally()
+                movePlayerVertically()
             }
 
             function movePlayerVertically() {
-                if (playerAvoidsVerticalBoundary()&& playerAvoidsObjects()) {
+                if (playerAvoidsVerticalBoundary() && playerAvoidsObjects()) {
                     player.y += player.dy;
                 }
             }
