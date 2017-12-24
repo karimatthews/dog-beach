@@ -15,14 +15,19 @@ var dogUp2 = document.getElementById('dogUp2');
 var tree3 = document.getElementById('tree3');
 
 var house1 = document.getElementById('house1');
+var house2 = document.getElementById('house2');
+var house3 = document.getElementById('house3');
+
+var gravel = document.getElementById('gravel');
+var water1 = document.getElementById('water1');
 
 var player = {
     x: 10,
-    y: 10,
+    y: 300,
     dx: 0,
     dy: 0,
-    width: 50,
-    height: 50,
+    width: 40,
+    height: 40,
     currentImages: [dogRight1, dogRight2]
 };
 
@@ -41,25 +46,63 @@ function buildSolidObject(type, x, y, width, height, img1, img2) {
    solidObjects.push(obj)
 }
 
-buildSolidObject('tree', 250, 200, 40, 40, tree3, tree3);
-buildSolidObject('tree', 100, 300, 40, 40, tree3, tree3);
-buildSolidObject('tree', 400, 100, 40, 40, tree3, tree3);
-buildSolidObject('tree', 100, 100, 40, 40, tree3, tree3);
+buildSolidObject('tree', 150, 60, 40, 40, tree3, tree3);
+buildSolidObject('tree', 320, 30, 40, 40, tree3, tree3);
+buildSolidObject('tree', 400, 10, 40, 40, tree3, tree3);
+buildSolidObject('tree', 230, 50, 40, 40, tree3, tree3);
 
-buildSolidObject('tree', 500, 300, 60, 60, house1, house1);
+buildSolidObject('house', 100, 400, 60, 60, house1, house1);
+buildSolidObject('house', 200, 400, 60, 60, house2, house2);
+buildSolidObject('house', 300, 400, 60, 60, house3, house3);
 
 
+var tiles = [];
+
+function buildTile(x, y, width, height, img) {
+    var tile = {
+        x: x,
+        y: y,
+        width: width,
+        height: height,
+        image: img
+    };
+    tiles.push(tile)
+}
+
+function buildRoad() {
+    var tileWidth = 50;
+    var i;
+    for (i = 0; i < canvas.width - tileWidth * 2; i = i + tileWidth) {
+        buildTile(i, 300, tileWidth, 50, gravel);
+    }
+}
+buildRoad();
+
+function buildWater() {
+    var tileHeight = 100;
+    var tileWidth = 100;
+    var i;
+    for (i = 0; i < canvas.height; i = i + tileHeight) {
+        buildSolidObject('water', canvas.width - tileWidth, i, tileWidth, tileHeight, water1, water1);
+    }
+}
+buildWater();
 
 function drawWorld() {
     ctx.clearRect(0, 0, canvas.width, canvas.height)
+    tiles.forEach(drawTile)
+    solidObjects.forEach(drawObject);
 
     // since tickCounter is always between 0 and 100, `tickCounter > 50` will be false for 50 frames then true for 50 frames
     // +true and +false gives 0 or 1, which lets us select alternating frames from currentImages every 50 ticks
     ctx.drawImage(player.currentImages[+(tickCounter > 50)], player.x, player.y, player.width, player.height)
 
     ctx.fillStyle = "#0a250e";
-    solidObjects.forEach(drawObject);
     window.requestAnimationFrame(drawWorld)
+}
+
+function drawTile(tile) {
+    ctx.drawImage(tile.image, tile.x, tile.y, tile.width, tile.height)
 }
 
 function drawObject(solidObject) {
