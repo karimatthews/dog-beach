@@ -40,7 +40,13 @@ var player = {
     dy: 0,
     width: 30,
     height: 30,
-    currentImages: [dogRight1, dogRight2]
+    currentImages: [dogRight1, dogRight2],
+    images: {
+        up: [dogUp1, dogUp2],
+        down: [dogDown1, dogDown2],
+        right: [dogRight1, dogRight2],
+        left: [dogLeft1, dogLeft2]
+    }
 };
 
 function movePlayerVertically() {
@@ -55,17 +61,17 @@ function movePlayerHorizontally() {
     }
 }
 
-function setPlayerAnimation() {
-  if (player.dx === 0 && player.dy === 0) {
-    player.currentImages = [player.currentImages[0], player.currentImages[0]]
-  } else if (player.dx > 0) {
-    player.currentImages = [dogRight1, dogRight2]
-  } else if (player.dx < 0) {
-    player.currentImages = [dogLeft1, dogLeft2]
-  } else if (player.dy < 0) {
-    player.currentImages = [dogUp1, dogUp2]
-  } else if (player.dy > 0) {
-    player.currentImages = [dogDown1, dogDown2]
+function setAnimation(creature) {
+  if (creature.dx === 0 && creature.dy === 0) {
+    creature.currentImages = [creature.currentImages[0], creature.currentImages[0]]
+  } else if (creature.dx > 0) {
+    creature.currentImages = creature.images.right
+  } else if (creature.dx < 0) {
+    creature.currentImages = creature.images.left
+  } else if (creature.dy < 0) {
+    creature.currentImages = creature.images.up
+  } else if (creature.dy > 0) {
+    creature.currentImages = creature.images.down
   }
 }
 
@@ -87,7 +93,7 @@ document.addEventListener("keydown", function(e) {
         //right arrow
         player.dx = 1
     }
-    setPlayerAnimation()
+    setAnimation(player)
 });
 
 document.addEventListener("keyup", function(e) {
@@ -96,7 +102,7 @@ document.addEventListener("keyup", function(e) {
         player.dx = 0;
         player.dy = 0;
     }
-    setPlayerAnimation()
+    setAnimation(player)
 });
 
 // Define other characters
@@ -106,11 +112,15 @@ function buildPerson(x, y, width, height, img1, img2) {
         y: y,
         width: width,
         height: height,
-        currentImages: [img1,img2]
+        currentImages: [img1,img2],
+        waypoints: [ {x: 0, y: 400}, {x: 0, y: 500}]
     };
     people.push(obj)
 }
 buildPerson(0,400, 11, 32, personRight1, personRight2);
+
+
+
 
 function drawWorld() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
