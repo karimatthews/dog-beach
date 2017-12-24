@@ -21,7 +21,14 @@ var personOneImages = {
     right: [personRight1, personRight2],
     left: [personLeft1, personLeft2]
 };
-buildPerson(0,400, 11, 32, personOneImages, [{target: true, x: 0, y: 400}, {x: 500, y: 400}]);
+var personOneWaypoints = [
+        {target: true, x: 0, y: 400},
+        {x: 100, y: 400},
+        {x: 200, y: 400},
+        {x: 200, y: 350},
+        {x: 0, y: 350}
+    ];
+buildPerson(0,400, 11, 32, personOneImages, personOneWaypoints);
 
 // Method for drawing background tiles
 function drawTile(tile) {
@@ -175,6 +182,13 @@ function setPersonDirection(person) {
     // If person below target point up
     if (person.y > target.y) {
         person.dy = -1;
+    }
+    // if person on target set to zero
+    if (person.y === target.y) {
+        person.dy = 0;
+    }
+    if (person.x === target.x) {
+        person.dx = 0;
     }
 }
 
