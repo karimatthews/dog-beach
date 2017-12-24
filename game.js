@@ -23,9 +23,10 @@ var personOneImages = {
 };
 var personOneWaypoints = [
         {target: true, x: 0, y: 400},
-        {x: 100, y: 400},
-        {x: 200, y: 400},
-        {x: 200, y: 350},
+        {x: 100, y: 400, waitTime: 200, waitedFor: 0},
+        {x: 100, y: 200},
+        {x: 150, y: 200},
+        {x: 150, y: 350, waitTime: 200, waitedFor: 0},
         {x: 0, y: 350}
     ];
 buildPerson(0,400, 11, 32, personOneImages, personOneWaypoints);
@@ -192,9 +193,28 @@ function setPersonDirection(person) {
     }
 }
 
+function isPersonWaiting(person, target) {
+    // Check if person has waited for the set time, and if so continue moving
+    if (target.waitTime >= target.waitedFor) {
+        target.waitedFor = 0;
+        return false;
+    } else {
+        // Increment waited for time
+        target.waitedFor += 5;
+        person.currentImages = [person.currentImages[0], person.currentImages[0]];
+        return true;
+    }
+}
+
 // Move person
 function movePerson(person) {
     var target = findCurrentTarget(person);
+    if (person.x === target.x && person.y === target.y && target.waitTime) {
+        var waiting = isPersonWaiting(person, target)
+    }
+    if (waiting) {
+        return;
+    }
     updateTargetWaypoint(person);
     setPersonDirection(person);
     person.x += person.dx;
