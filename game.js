@@ -20,6 +20,8 @@ var house3 = document.getElementById('house3');
 
 var gravel = document.getElementById('gravel');
 var water1 = document.getElementById('water1');
+var road1 = document.getElementById('road1');
+var grass1 = document.getElementById('grass1');
 
 var player = {
     x: 10,
@@ -46,10 +48,10 @@ function buildSolidObject(type, x, y, width, height, img1, img2) {
    solidObjects.push(obj)
 }
 
-buildSolidObject('tree', 150, 60, 40, 40, tree3, tree3);
-buildSolidObject('tree', 320, 30, 40, 40, tree3, tree3);
-buildSolidObject('tree', 400, 10, 40, 40, tree3, tree3);
-buildSolidObject('tree', 230, 50, 40, 40, tree3, tree3);
+buildSolidObject('tree', 70, 60, 40, 40, tree3, tree3);
+buildSolidObject('tree', 10, 30, 40, 40, tree3, tree3);
+buildSolidObject('tree', 100, 10, 40, 40, tree3, tree3);
+buildSolidObject('tree', 30, 100, 40, 40, tree3, tree3);
 
 buildSolidObject('house', 100, 400, 60, 60, house1, house1);
 buildSolidObject('house', 200, 400, 60, 60, house2, house2);
@@ -73,10 +75,20 @@ function buildRoad() {
     var tileWidth = 50;
     var i;
     for (i = 0; i < canvas.width - tileWidth * 2; i = i + tileWidth) {
-        buildTile(i, 300, tileWidth, 50, gravel);
+        buildTile(i, 300, tileWidth, 50, road1);
     }
 }
 buildRoad();
+
+function buildSand() {
+    var tileHeight = 50;
+    var tileWidth = 50;
+    var i;
+    for (i = 0; i < canvas.height; i = i + tileHeight) {
+        buildTile(canvas.width - 150, i, tileWidth, tileHeight, gravel);
+    }
+}
+buildSand();
 
 function buildWater() {
     var tileHeight = 100;
@@ -87,6 +99,19 @@ function buildWater() {
     }
 }
 buildWater();
+
+function buildPark() {
+    var tileHeight = 10;
+    var tileWidth = 10;
+    var j;
+    for (j = 0; j < 200 - tileHeight; j = j + tileHeight) {
+        var i;
+        for (i = 0; i < 200 - tileWidth; i = i + tileWidth) {
+            buildTile(i, j, tileWidth, tileHeight, grass1);
+        }
+    }
+}
+buildPark();
 
 function drawWorld() {
     ctx.clearRect(0, 0, canvas.width, canvas.height)
