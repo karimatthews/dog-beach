@@ -12,6 +12,15 @@ var dogDown2 = document.getElementById('dogDown2');
 var dogUp1 = document.getElementById('dogUp1');
 var dogUp2 = document.getElementById('dogUp2');
 
+var personRight1 = document.getElementById('personRight1');
+var personRight2 = document.getElementById('personRight2');
+var personLeft1 = document.getElementById('personLeft1');
+var personLeft2 = document.getElementById('personLeft2');
+var personDown1 = document.getElementById('personDown1');
+var personDown2 = document.getElementById('personDown2');
+var personUp1 = document.getElementById('personUp1');
+var personUp2 = document.getElementById('personUp2');
+
 var tree3 = document.getElementById('tree3');
 
 var house1 = document.getElementById('house1');
@@ -28,10 +37,24 @@ var player = {
     y: 300,
     dx: 0,
     dy: 0,
-    width: 40,
-    height: 40,
+    width: 30,
+    height: 30,
     currentImages: [dogRight1, dogRight2]
 };
+
+var people = [];
+function buildPerson(x, y, width, height, img1, img2) {
+    var obj = {
+        x: x,
+        y: y,
+        width: width,
+        height: height,
+        currentImages: [img1,img2]
+    };
+    people.push(obj)
+}
+
+buildPerson(0,400, 11, 32, personRight1, personRight2);
 
 var tickCounter = 0;
 var solidObjects = [];
@@ -53,9 +76,9 @@ buildSolidObject('tree', 10, 30, 40, 40, tree3, tree3);
 buildSolidObject('tree', 100, 10, 40, 40, tree3, tree3);
 buildSolidObject('tree', 30, 100, 40, 40, tree3, tree3);
 
-buildSolidObject('house', 100, 400, 60, 60, house1, house1);
-buildSolidObject('house', 200, 400, 60, 60, house2, house2);
-buildSolidObject('house', 300, 400, 60, 60, house3, house3);
+buildSolidObject('house', 400, 210, 60, 60, house1, house1);
+buildSolidObject('house', 200, 210, 60, 60, house2, house2);
+buildSolidObject('house', 300, 210, 60, 60, house3, house3);
 
 
 var tiles = [];
@@ -106,7 +129,7 @@ function buildPark() {
     var j;
     for (j = 0; j < 200 - tileHeight; j = j + tileHeight) {
         var i;
-        for (i = 0; i < 200 - tileWidth; i = i + tileWidth) {
+        for (i = 0; i < 550; i = i + tileWidth) {
             buildTile(i, j, tileWidth, tileHeight, grass1);
         }
     }
@@ -114,9 +137,10 @@ function buildPark() {
 buildPark();
 
 function drawWorld() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height)
-    tiles.forEach(drawTile)
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    tiles.forEach(drawTile);
     solidObjects.forEach(drawObject);
+    people.forEach(drawObject);
 
     // since tickCounter is always between 0 and 100, `tickCounter > 50` will be false for 50 frames then true for 50 frames
     // +true and +false gives 0 or 1, which lets us select alternating frames from currentImages every 50 ticks
@@ -231,4 +255,4 @@ document.addEventListener("keyup", function(e) {
     setPlayerAnimation()
 });
 setInterval(tick, 5);
-drawWorld()
+drawWorld();
