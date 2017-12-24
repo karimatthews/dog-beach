@@ -55,7 +55,7 @@ var player = {
     dy: 0,
     width: 30,
     height: 30,
-    currentImages: [dogRight1, dogRight2],
+    currentImages: [dogRight1, dogRight1],
     images: {
         up: [dogUp1, dogUp2],
         down: [dogDown1, dogDown2],
@@ -185,6 +185,7 @@ function movePerson(person) {
     setPersonDirection(person);
     person.x += person.dx;
     person.y += person.dy;
+    setAnimation(person)
 }
 
 // Animate person
