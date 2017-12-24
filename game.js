@@ -14,6 +14,15 @@ buildSand();
 buildWater();
 buildPark();
 
+// Build people
+var personOneImages = {
+    up: [personUp1, personUp2],
+    down: [personDown1, personDown2],
+    right: [personRight1, personRight2],
+    left: [personLeft1, personLeft2]
+};
+buildPerson(0,400, 11, 32, personOneImages, [{target: true, x: 0, y: 400}, {x: 500, y: 400}]);
+
 // Method for drawing background tiles
 function drawTile(tile) {
     ctx.drawImage(tile.image, tile.x, tile.y, tile.width, tile.height);
@@ -27,7 +36,13 @@ function drawObject(solidObject) {
 
 function tick() {
     tickCounter++;
-    if (tickCounter > 100) { tickCounter = 0 }
+    if (tickCounter > 100) {
+        tickCounter = 0;
+    }
+
+    if (tickCounter % 5 === 0) {
+        people.forEach(movePerson);
+    }
     movePlayerHorizontally();
     movePlayerVertically();
 }
@@ -106,21 +121,74 @@ document.addEventListener("keyup", function(e) {
 });
 
 // Define other characters
-function buildPerson(x, y, width, height, img1, img2) {
-    var obj = {
+function buildPerson(x, y, width, height, images, waypoints) {
+    var person = {
         x: x,
         y: y,
+        dx: 0,
+        dy: 0,
         width: width,
         height: height,
-        currentImages: [img1,img2],
-        waypoints: [ {x: 0, y: 400}, {x: 0, y: 500}]
+        currentImages: [images.right[0], images.right[0]],
+        images: images,
+        waypoints: waypoints
     };
-    people.push(obj)
+    people.push(person)
 }
-buildPerson(0,400, 11, 32, personRight1, personRight2);
 
+function findCurrentTarget(person) {
+    return person.waypoints.find(function(waypoint) {
+        return waypoint.target;
+    });
+}
 
+// Make person move between waypoints
+function updateTargetWaypoint(person) {
+    var target = findCurrentTarget(person);
+    // If person has reached current target, update current target to the next waypoint in the list
+    if (target.x === person.x && target.y === person.y) {
+        target.target = false;
+        var nextIndex = person.waypoints.indexOf(target) + 1;
+        if (nextIndex === person.waypoints.length) {
+            // If we've reached the last waypoint in list, start cycle again
+            person.waypoints[0].target = true;
+        } else {
+            person.waypoints[nextIndex].target = true;
+        }
+    }
+}
 
+function setPersonDirection(person) {
+    var target = findCurrentTarget(person);
+    // If person to right of target point left
+    if (person.x > target.x) {
+        person.dx = -1;
+    }
+    // If person to left of target point right
+    if (person.x < target.x) {
+        person.dx =1;
+    }
+    // If person above target point down
+    if (person.y < target.y) {
+        person.dy = 1;
+    }
+    // If person below target point up
+    if (person.y > target.y) {
+        person.dy = -1;
+    }
+}
+
+// Move person
+function movePerson(person) {
+    var target = findCurrentTarget(person);
+    updateTargetWaypoint(person);
+    setPersonDirection(person);
+    person.x += person.dx;
+    person.y += person.dy;
+}
+
+// Animate person
+// TODO
 
 function drawWorld() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -136,5 +204,7 @@ function drawWorld() {
     window.requestAnimationFrame(drawWorld)
 }
 drawWorld();
+
+
 
 
