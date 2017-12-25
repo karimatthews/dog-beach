@@ -15,6 +15,7 @@ buildWater();
 buildPark();
 
 // Build people
+// Person One
 var personOneImages = {
     up: [personUp1, personUp2],
     down: [personDown1, personDown2],
@@ -29,7 +30,7 @@ var personOneWaypoints = [
         {x: 150, y: 350, waitTime: 200, waitedFor: 0},
         {x: 0, y: 350}
     ];
-buildPerson(0,400, 11, 32, personOneImages, personOneWaypoints);
+buildPerson(0,400, 11, 32, personOneImages, personOneWaypoints, 'Hi doggo!');
 
 // Method for drawing background tiles
 function drawTile(tile) {
@@ -51,8 +52,16 @@ function tick() {
     if (tickCounter % 5 === 0) {
         people.forEach(movePerson);
     }
+    if (playerMeetsPerson()) {
+        interaction();
+    }
     movePlayerHorizontally();
     movePlayerVertically();
+}
+
+function interaction() {
+    var person = playerMeetsPerson();
+    console.log(person.dialog);
 }
 
 // Define the doggo/player
@@ -129,7 +138,7 @@ document.addEventListener("keyup", function(e) {
 });
 
 // Define other characters
-function buildPerson(x, y, width, height, images, waypoints) {
+function buildPerson(x, y, width, height, images, waypoints, dialog) {
     var person = {
         x: x,
         y: y,
@@ -139,7 +148,8 @@ function buildPerson(x, y, width, height, images, waypoints) {
         height: height,
         currentImages: [images.right[0], images.right[0]],
         images: images,
-        waypoints: waypoints
+        waypoints: waypoints,
+        dialog: dialog
     };
     people.push(person)
 }
